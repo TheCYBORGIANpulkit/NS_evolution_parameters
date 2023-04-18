@@ -1,0 +1,73 @@
+&binary_job
+
+   inlist_names(1) = 'inlist1' 
+   inlist_names(2) = 'inlist2'
+   show_binary_log_description_at_start = .false.
+   evolve_both_stars = .false.
+
+/ ! end of binary_job namelist
+
+! Note : This File contains all the physical conditions used in the evolution of LMXBs in the form of parameter and their meaning. 
+! Note : To go to the "other" angular momentum loss mechanism, kindly refer to the jdot_ml "run_extras_binary" inlist file.
+
+&binary_controls                          ! List of all the physical conditions start from here
+         
+   m1 = 1.0d0  ! donor mass in Msun
+   m2 = 1.35d0 ! neutron star mass in Msun
+
+   initial_period_in_days = 1.00d0
+
+   initial_eccentricity = 0.0
+   
+   history_interval = 1                 ! The history is produced after these many intervals.
+   fr = 0.05 
+   fj = 0.001d0
+   fj_hard = 1.00d0
+   fa = 0.01d0
+   fa_hard = 2.0d0     
+   fr_limit = 1d-2                        ! not changed from default
+   
+   do_jdot_gr = .true.                    ! Orbital angular momentum loss due to gravitational loss
+   do_jdot_ml = .true.                    ! Orbital angular momentum loss due to mass loss as wind
+   do_jdot_ls = .true.                    ! on true, keeping jdot conserved except for defined losses
+   do_jdot_mb = .true.                    ! Orbital angular momentum loss due to magnetic braking
+   do_jdot_missing_wind = .false.
+
+   jdot_mb_min_qconv_env = 1d-6           ! The mass fraction of the convective envelope has to be > jdot_mb_min_qconv_env
+   jdot_mb_max_qconv_env = 0.99d0         ! The mass fraction of the convective envelope has to be < jdot_mb_max_qconv_env
+   jdot_mb_max_qrad_core = 1d0            ! The mass fraction of the radiative core has to be < jdot_mb_max_qrad_core, By default, it was 10^{-2} which led to a few instability points in 
+                                          !  the case of ultracompact binaries.
+   
+   magnetic_braking_gamma = 4.0d0         ! It should be 4 according to the paper. 
+   keep_mb_on = .false.                   ! magnetic braking stopping when radiative core goes away. 
+   
+   mass_transfer_alpha = 0.0d0           ! fraction of mass lost from the vicinity of the donor as fast wind
+   mass_transfer_beta = 0.0d0            ! fraction of mass lost from the vicinity of the accretor as fast wind
+   mass_transfer_delta = 0.0d0           ! fraction of the mass lost from circumbinary coplanar toroid
+   
+   !do_wind_mass_transfer_1 = .true.      ! transfer part of the mass lost due to stellar winds from the mass losing
+                                          ! component to its companion. Using the Bondi-Hoyle mechanism.
+   !max_wind_transfer_fraction_1 = 1d0    
+
+
+   limit_retention_by_mdot_edd = .true.    ! to limit the accretion rate by Eddington's rate.
+   accretion_powered_irradiation = .false. ! turn on irradiation of the donor due to accretion onto a compact object. 
+
+
+   use_other_mdot_edd = .true.          ! for directing to use mdot_edd different from the default one (written by Jiakun)
+   use_other_jdot_ml = .true.           ! for directing to use mechanism for jdot_ml different from the default one (written by Jiakun)
+
+!! Switch between the following two, not be used together
+   use_other_adjust_mdots = .true
+   !use_radiation_corrected_transfer_rate = .true.
+
+   use_other_extra_jdot = .false.       ! to use no other extra angular momentum loss mechanism
+
+   do_tidal_sync = .true.               ! MESA requires the stars to be in tidal synchronization to calculate magnetic braking. 
+   do_initial_orbit_sync_1 = .true.     ! Relax rotation of star to orbital period at the beggining of evolution.
+   do_tidal_circ = .true.               ! If true, apply tidal torque to the star
+
+   max_tries_to_achieve = 500           ! Maximum # of retry to be taken by the solver
+
+/ ! end of binary_controls namelist
+
